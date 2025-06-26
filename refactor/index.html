@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FokinProt - Sistema de Emergencias</title>
+    <title>Urgences - Sistema de Emergencias</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
     <div id="loginScreen" class="screen">
         <div class="container">
             <div class="login-card">
-                <h1>🚨 FokinProt</h1>
+                <h1>🚨 Urgences</h1>
                 <p>Sistema de Emergencias</p>
                 
                 <form id="loginForm">
@@ -52,7 +52,7 @@
     <div id="registerScreen" class="screen hidden">
         <div class="container">
             <div class="login-card">
-                <h1>🚨 FokinProt</h1>
+                <h1>🚨 Urgences</h1>
                 <p>Crear Nueva Cuenta</p>
                 
                 <form id="registerForm">
@@ -108,7 +108,7 @@
     <div id="dashboardScreen" class="screen hidden">
                 <header class="header">
             <div class="header-content">
-                <h1>🚨 FokinProt</h1>
+                <h1>🚨 Urgences</h1>
                 <div class="user-info">
                     <span id="userName">Usuario</span>
                     <button onclick="updateUserLocation()" class="btn btn-warning" style="margin-right: 10px;">📍 Actualizar Ubicación</button>
@@ -200,6 +200,11 @@
                     <div class="assigned-emergencies">
                         <h3>Emergencias Asignadas</h3>
                         <div id="assignedEmergenciesList"></div>
+                    </div>
+                    
+                    <div class="available-emergencies">
+                        <h3>Emergencias Disponibles</h3>
+                        <div id="availableEmergenciesList"></div>
                     </div>
                 </div>
             </div>

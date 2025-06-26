@@ -1,7 +1,7 @@
-# FokinProt - Sistema de Emergencias Simplificado
+# Urgences - Sistema de Emergencias Simplificado
 
 ## 📋 Descripción
-FokinProt es un sistema de emergencias ultra simplificado diseñado para estudiantes de primaria. Utiliza únicamente HTML, CSS y JavaScript vanilla, sin bases de datos ni servidores complejos.
+Urgences es un sistema de emergencias ultra simplificado diseñado para estudiantes de primaria. Utiliza únicamente HTML, CSS y JavaScript vanilla, sin bases de datos ni servidores complejos.
 
 ## 🚀 Características
 - **Sin instalación**: Solo abrir el archivo HTML en cualquier navegador
@@ -25,8 +25,11 @@ FokinProt es un sistema de emergencias ultra simplificado diseñado para estudia
 
 ### 🚒 Unidades de Emergencia (Bombero, Policía, Ambulancia)
 - Ve emergencias asignadas
+- **NUEVO:** Ve emergencias disponibles para auto-asignarse
+- **NUEVO:** Puede auto-asignarse emergencias de su tipo
 - Puede cambiar su estado (Disponible, En Servicio, Fuera de Servicio)
 - Actualiza el estado de sus emergencias
+- **Auto-cambio de estado:** Al asignarse una emergencia, cambia automáticamente a "En Servicio"
 
 ## 🔐 Usuarios de Prueba
 
@@ -55,6 +58,10 @@ FokinProt es un sistema de emergencias ultra simplificado diseñado para estudia
 ### Para Unidades
 - ✅ Control de estado personal
 - ✅ Lista de emergencias asignadas
+- ✅ **NUEVO:** Lista de emergencias disponibles para auto-asignarse
+- ✅ **NUEVO:** Botón "Asignarme Esta Emergencia" 
+- ✅ **NUEVO:** Filtrado automático por tipo de unidad
+- ✅ **NUEVO:** Cambio automático de estado al asignarse
 - ✅ Actualización de progreso
 
 ## 🎨 Diseño

@@ -1,29 +1,23 @@
-// Estado global de la aplicación
 let currentUser = null;
 let emergencies = [];
 let users = [];
 let userLocation = null;
 
-// Inicializar aplicación
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     setupEventListeners();
 });
 
-// Inicializar datos si no existen
 function initializeApp() {
-    // Verificar si existen datos en localStorage
-    if (!localStorage.getItem('fokinprot_users')) {
+    if (!localStorage.getItem('urgences_users')) {
         loadInitialData();
     } else {
         loadDataFromStorage();
     }
     
-    // Mostrar pantalla de login
     showScreen('loginScreen');
 }
 
-// Cargar datos iniciales de prueba
 function loadInitialData() {
     users = [
         {
@@ -113,45 +107,32 @@ function loadInitialData() {
         }
     ];
     
-    // Guardar en localStorage
     saveDataToStorage();
 }
 
-// Cargar datos desde localStorage
 function loadDataFromStorage() {
-    users = JSON.parse(localStorage.getItem('fokinprot_users')) || [];
-    emergencies = JSON.parse(localStorage.getItem('fokinprot_emergencies')) || [];
+    users = JSON.parse(localStorage.getItem('urgences_users')) || [];
+    emergencies = JSON.parse(localStorage.getItem('urgences_emergencies')) || [];
 }
 
-// Guardar datos en localStorage
 function saveDataToStorage() {
-    localStorage.setItem('fokinprot_users', JSON.stringify(users));
-    localStorage.setItem('fokinprot_emergencies', JSON.stringify(emergencies));
+    localStorage.setItem('urgences_users', JSON.stringify(users));
+    localStorage.setItem('urgences_emergencies', JSON.stringify(emergencies));
 }
 
-// Configurar event listeners
 function setupEventListeners() {
-    // Login form
     document.getElementById('loginForm').addEventListener('submit', handleLogin);
-    
-    // Register form
     document.getElementById('registerForm').addEventListener('submit', handleRegister);
-    
-    // Logout button
     document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-    
-    // Emergency form
     document.getElementById('emergencyForm').addEventListener('submit', handleEmergencySubmit);
 }
 
-// Manejar login
 function handleLogin(e) {
     e.preventDefault();
     
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     
-    // Buscar usuario
     const user = users.find(u => u.email === email && u.password === password);
     
     if (user) {
@@ -165,7 +146,6 @@ function handleLogin(e) {
     }
 }
 
-// Manejar logout
 function handleLogout() {
     currentUser = null;
     userLocation = null;
@@ -174,7 +154,6 @@ function handleLogout() {
     showScreen('loginScreen');
 }
 
-// Manejar registro
 function handleRegister(e) {
     e.preventDefault();
     
@@ -184,14 +163,12 @@ function handleRegister(e) {
     const password = document.getElementById('regPassword').value;
     const tipo_usuario = document.getElementById('regTipoUsuario').value;
     
-    // Verificar si el email ya existe
     const existingUser = users.find(u => u.email === email);
     if (existingUser) {
         alert('Ya existe un usuario con este email');
         return;
     }
     
-    // Crear nuevo usuario
     const newUser = {
         id: Date.now(),
         nombre,
@@ -211,13 +188,10 @@ function handleRegister(e) {
     alert('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
     showLoginForm();
     
-    // Limpiar formulario
     document.getElementById('registerForm').reset();
     document.getElementById('locationStatus').innerHTML = '';
     userLocation = null;
 }
-
-// Mostrar formularios
 function showLoginForm() {
     showScreen('loginScreen');
 }
@@ -234,14 +208,11 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.remove('hidden');
 }
 
-// Mostrar panel según tipo de usuario
 function showUserPanel(userType) {
-    // Ocultar todos los paneles
     document.querySelectorAll('.panel').forEach(panel => {
         panel.classList.add('hidden');
     });
     
-    // Mostrar panel correspondiente
     switch(userType) {
         case 'ciudadano':
             document.getElementById('citizenPanel').classList.remove('hidden');
@@ -260,7 +231,6 @@ function showUserPanel(userType) {
     }
 }
 
-// Actualizar dashboard
 function updateDashboard() {
     if (currentUser.tipo_usuario === 'ciudadano') {
         updateMyEmergencies();
@@ -270,6 +240,7 @@ function updateDashboard() {
         updateUsersList();
     } else {
         updateAssignedEmergencies();
+        updateAvailableEmergencies();
     }
 }
 
@@ -372,7 +343,6 @@ function updateAllEmergencies() {
     }).join('');
 }
 
-// Actualizar emergencias asignadas (unidades)
 function updateAssignedEmergencies() {
     const assignedEmergencies = emergencies.filter(e => e.unidad_asignada === currentUser.id);
     const container = document.getElementById('assignedEmergenciesList');
@@ -403,6 +373,51 @@ function updateAssignedEmergencies() {
                     <span>📅 ${formatDate(emergency.fecha_creacion)}</span>
                     <button onclick="updateEmergencyStatus(${emergency.id})" class="btn btn-primary" style="font-size: 0.8rem; padding: 5px 10px;">
                         Actualizar Estado
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateAvailableEmergencies() {
+    const availableEmergencies = emergencies.filter(e => 
+        !e.unidad_asignada && 
+        e.estado === 'pendiente' &&
+        (e.tipo_emergencia === currentUser.tipo_usuario || 
+         (currentUser.tipo_usuario === 'bombero' && e.tipo_emergencia === 'bomberos'))
+    );
+    const container = document.getElementById('availableEmergenciesList');
+    
+    if (availableEmergencies.length === 0) {
+        container.innerHTML = '<p>No hay emergencias disponibles para tu tipo de unidad.</p>';
+        return;
+    }
+    
+    container.innerHTML = availableEmergencies.map(emergency => {
+        const user = users.find(u => u.id === emergency.usuario_id);
+        
+        return `
+            <div class="emergency-item ${emergency.tipo_emergencia}">
+                <div class="emergency-header">
+                    <div class="emergency-type">
+                        ${getEmergencyIcon(emergency.tipo_emergencia)} ${emergency.tipo_emergencia.toUpperCase()}
+                    </div>
+                    <div class="emergency-status status-${emergency.estado}">${emergency.estado}</div>
+                </div>
+                <div class="emergency-details">
+                    <p><strong>Reportado por:</strong> ${user ? user.nombre : 'Usuario desconocido'}</p>
+                    <p><strong>Descripción:</strong> ${emergency.descripcion || 'Sin descripción'}</p>
+                    <p><strong>Dirección:</strong> ${emergency.direccion || 'No especificada'}</p>
+                    ${emergency.ubicacion_lat && emergency.ubicacion_lng ? 
+                        `<p><strong>Coordenadas:</strong> ${emergency.ubicacion_lat.toFixed(4)}, ${emergency.ubicacion_lng.toFixed(4)}</p>` : ''
+                    }
+                </div>
+                <div class="emergency-meta">
+                    <span class="priority-${emergency.prioridad}">${emergency.prioridad}</span>
+                    <span>📅 ${formatDate(emergency.fecha_creacion)}</span>
+                    <button onclick="selfAssignEmergency(${emergency.id})" class="btn btn-success" style="font-size: 0.8rem; padding: 5px 10px;">
+                        Asignarme Esta Emergencia
                     </button>
                 </div>
             </div>
@@ -466,7 +481,40 @@ function updateUnitStatus() {
     alert(`Estado actualizado a: ${newStatus}`);
 }
 
-// Asignar emergencia (función simplificada)
+function selfAssignEmergency(emergencyId) {
+    const emergency = emergencies.find(e => e.id === emergencyId);
+    if (!emergency) {
+        alert('Emergencia no encontrada');
+        return;
+    }
+    
+    if (emergency.unidad_asignada) {
+        alert('Esta emergencia ya está asignada a otra unidad');
+        return;
+    }
+    
+    if (currentUser.estado !== 'disponible') {
+        alert('Debes estar en estado "disponible" para asignarte una emergencia');
+        return;
+    }
+    
+    emergency.unidad_asignada = currentUser.id;
+    emergency.estado = 'en-progreso';
+    
+    currentUser.estado = 'en_servicio';
+    const userIndex = users.findIndex(u => u.id === currentUser.id);
+    if (userIndex !== -1) {
+        users[userIndex].estado = 'en_servicio';
+    }
+    
+    document.getElementById('unitStatus').value = 'en_servicio';
+    
+    saveDataToStorage();
+    updateDashboard();
+    
+    alert(`Te has asignado exitosamente a la emergencia. Tu estado cambió a "en servicio".`);
+}
+
 function assignEmergency(emergencyId) {
     const availableUnits = users.filter(u => 
         ['bombero', 'policia', 'ambulancia'].includes(u.tipo_usuario) && 
@@ -478,13 +526,11 @@ function assignEmergency(emergencyId) {
         return;
     }
     
-    // Asignar a la primera unidad disponible (simplificado)
     const emergency = emergencies.find(e => e.id === emergencyId);
     if (emergency) {
         emergency.unidad_asignada = availableUnits[0].id;
         emergency.estado = 'en-progreso';
         
-        // Cambiar estado de la unidad
         availableUnits[0].estado = 'en_servicio';
         
         saveDataToStorage();
@@ -494,7 +540,6 @@ function assignEmergency(emergencyId) {
     }
 }
 
-// Actualizar estado de emergencia
 function updateEmergencyStatus(emergencyId) {
     const newStatus = prompt('Nuevo estado (pendiente/en-progreso/resuelto):');
     
@@ -503,11 +548,14 @@ function updateEmergencyStatus(emergencyId) {
         if (emergency) {
             emergency.estado = newStatus;
             
-            // Si se resuelve, liberar la unidad
             if (newStatus === 'resuelto' && emergency.unidad_asignada) {
                 const unit = users.find(u => u.id === emergency.unidad_asignada);
                 if (unit) {
                     unit.estado = 'disponible';
+                    if (unit.id === currentUser.id) {
+                        currentUser.estado = 'disponible';
+                        document.getElementById('unitStatus').value = 'disponible';
+                    }
                 }
             }
             
@@ -542,7 +590,6 @@ function formatDate(dateString) {
     });
 }
 
-// Funciones de geolocalización
 function getCurrentLocation() {
     const statusElement = document.getElementById('locationStatus');
     

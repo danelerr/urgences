@@ -424,6 +424,18 @@ body {
     margin-top: 30px;
 }
 
+.assigned-emergencies h3,
+.available-emergencies h3 {
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 10px;
+}
+
+.available-emergencies {
+    margin-top: 40px;
+}
+
 .emergencies-list h3,
 .my-emergencies h3,
 .assigned-emergencies h3 {
