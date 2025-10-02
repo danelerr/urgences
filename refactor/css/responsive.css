@@ -1,0 +1,64 @@
+@media (max-width: 768px) {
+    .login-card {
+        margin: 20px auto;
+        padding: 30px 20px;
+    }
+    
+    .header {
+        height: auto;
+        min-height: 70px;
+        padding: 10px 0;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+        padding: 10px 15px;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .user-info {
+        flex-direction: row;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .user-info span {
+        font-size: 14px;
+    }
+    
+    .user-info button {
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+    
+    #mapContainer {
+        margin-top: 90px;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
+    
+    .citizen-panel {
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 20px;
+    }
+    
+    .citizen-panel .btn {
+        font-size: 13px;
+        padding: 10px;
+    }
+}

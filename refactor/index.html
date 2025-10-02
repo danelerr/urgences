@@ -4,258 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urgences - Sistema de Emergencias</title>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/mapkick@0.2.6/dist/mapkick.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        Mapkick.options = {
+            style: {
+                "version": 8,
+                "sources": {
+                    "osm": {
+                        "type": "raster",
+                        "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+                        "tileSize": 256,
+                        "attribution": "© OpenStreetMap contributors"
+                    }
+                },
+                "layers": [{
+                    "id": "osm",
+                    "type": "raster",
+                    "source": "osm"
+                }]
+            }
+        }
+    </script>
 </head>
 <body>
-    <!-- Pantalla de Login -->
     <div id="loginScreen" class="screen">
-        <div class="container">
-            <div class="login-card">
-                <h1>🚨 Urgences</h1>
-                <p>Sistema de Emergencias</p>
-                
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password">Contraseña:</label>
-                        <input type="password" id="password" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-                </form>
-                
-                <div class="demo-users">
-                    <h3>Usuarios de Prueba:</h3>
-                    <div class="demo-user">
-                        <strong>Ciudadano:</strong> ciudadano@test.com / 123456
-                    </div>
-                    <div class="demo-user">
-                        <strong>Operador:</strong> operador@test.com / 123456
-                    </div>
-                    <div class="demo-user">
-                        <strong>Bombero:</strong> bombero@test.com / 123456
-                    </div>
+        <div class="login-card">
+            <h1>🚨 Urgences</h1>
+            <p>Sistema de Emergencias</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email" required>
                 </div>
-                
-                <div class="register-link">
-                    <p>¿No tienes cuenta? <a href="#" onclick="showRegisterForm()">Regístrate aquí</a></p>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Contraseña" required>
                 </div>
+                <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+            </form>
+            
+            <div class="demo-users">
+                <small>Usuarios de prueba:</small><br>
+                <small>ciudadano@test.com / operador@test.com / bombero@test.com / policia@test.com / ambulancia@test.com</small><br>
+                <small>Contraseña: 123456</small>
             </div>
         </div>
     </div>
 
-    <!-- Pantalla de Registro -->
-    <div id="registerScreen" class="screen hidden">
-        <div class="container">
-            <div class="login-card">
-                <h1>🚨 Urgences</h1>
-                <p>Crear Nueva Cuenta</p>
-                
-                <form id="registerForm">
-                    <div class="form-group">
-                        <label for="regNombre">Nombre Completo:</label>
-                        <input type="text" id="regNombre" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="regEmail">Email:</label>
-                        <input type="email" id="regEmail" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="regTelefono">Teléfono:</label>
-                        <input type="tel" id="regTelefono" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="regPassword">Contraseña:</label>
-                        <input type="password" id="regPassword" required minlength="6">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="regTipoUsuario">Tipo de Usuario:</label>
-                        <select id="regTipoUsuario" required>
-                            <option value="">Selecciona...</option>
-                            <option value="ciudadano">Ciudadano</option>
-                            <option value="bombero">Bombero</option>
-                            <option value="policia">Policía</option>
-                            <option value="ambulancia">Ambulancia</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <button type="button" onclick="getCurrentLocation()" class="btn btn-warning">
-                            📍 Obtener Mi Ubicación
-                        </button>
-                        <div id="locationStatus" class="location-status"></div>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Registrarse</button>
-                </form>
-                
-                <div class="register-link">
-                    <p>¿Ya tienes cuenta? <a href="#" onclick="showLoginForm()">Inicia sesión aquí</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Dashboard Principal -->
-    <div id="dashboardScreen" class="screen hidden">
-                <header class="header">
+    <div id="appScreen" class="screen hidden">
+        <header class="header">
             <div class="header-content">
                 <h1>🚨 Urgences</h1>
                 <div class="user-info">
                     <span id="userName">Usuario</span>
-                    <button onclick="updateUserLocation()" class="btn btn-warning" style="margin-right: 10px;">📍 Actualizar Ubicación</button>
                     <button id="logoutBtn" class="btn btn-secondary">Cerrar Sesión</button>
                 </div>
             </div>
         </header>
 
-        <main class="main-content">
-            <div class="container">
-                <!-- Panel del Ciudadano -->
-                <div id="citizenPanel" class="panel hidden">
-                    <h2>Panel de Ciudadano</h2>
-                    <div class="emergency-buttons">
-                        <button class="emergency-btn fire" onclick="createEmergency('bomberos')">
-                            🔥 BOMBEROS
-                        </button>
-                        <button class="emergency-btn police" onclick="createEmergency('policia')">
-                            👮 POLICÍA
-                        </button>
-                        <button class="emergency-btn ambulance" onclick="createEmergency('ambulancia')">
-                            🚑 AMBULANCIA
-                        </button>
-                    </div>
-                    
-                    <div class="my-emergencies">
-                        <h3>Mis Emergencias</h3>
-                        <div id="myEmergenciesList"></div>
-                    </div>
-                </div>
+        <div id="mapContainer" style="height: calc(100vh - 70px);"></div>
 
-                <!-- Panel del Operador -->
-                <div id="operatorPanel" class="panel hidden">
-                    <h2>Panel de Operador</h2>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <h3>Emergencias Activas</h3>
-                            <div class="stat-number" id="activeEmergencies">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Unidades Disponibles</h3>
-                            <div class="stat-number" id="availableUnits">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Total Usuarios</h3>
-                            <div class="stat-number" id="totalUsers">0</div>
-                        </div>
-                    </div>
-                    
-                    <div class="emergencies-list">
-                        <h3>Todas las Emergencias</h3>
-                        <div class="filter-controls">
-                            <select id="filterStatus" onchange="updateAllEmergencies()">
-                                <option value="">Todos los estados</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="en-progreso">En Progreso</option>
-                                <option value="resuelto">Resuelto</option>
-                            </select>
-                            <select id="filterType" onchange="updateAllEmergencies()">
-                                <option value="">Todos los tipos</option>
-                                <option value="bomberos">Bomberos</option>
-                                <option value="policia">Policía</option>
-                                <option value="ambulancia">Ambulancia</option>
-                            </select>
-                        </div>
-                        <div id="allEmergenciesList"></div>
-                    </div>
-                    
-                    <div class="users-management">
-                        <h3>Gestión de Usuarios</h3>
-                        <div id="usersList"></div>
-                    </div>
-                </div>
+        <div id="citizenPanel" class="citizen-panel hidden">
+            <h4>Panel Ciudadano</h4>
+            <button onclick="showReportModal()" class="btn btn-danger">🚨 Reportar Emergencia</button>
+            <button onclick="getCurrentLocation()" class="btn btn-warning">📍 Mi Ubicación</button>
+            <button onclick="startLocationSelectionFromPanel()" class="btn btn-info">📍 Seleccionar Ubicación</button>
+            <div id="locationInfo" class="location-info"></div>
+        </div>
 
-                <!-- Panel de Unidad de Emergencia -->
-                <div id="unitPanel" class="panel hidden">
-                    <h2>Panel de <span id="unitType">Unidad</span></h2>
-                    
-                    <div class="status-control">
-                        <label for="unitStatus">Estado:</label>
-                        <select id="unitStatus" onchange="updateUnitStatus()">
-                            <option value="disponible">Disponible</option>
-                            <option value="en_servicio">En Servicio</option>
-                            <option value="fuera_servicio">Fuera de Servicio</option>
-                        </select>
-                    </div>
-                    
-                    <div class="assigned-emergencies">
-                        <h3>Emergencias Asignadas</h3>
-                        <div id="assignedEmergenciesList"></div>
-                    </div>
-                    
-                    <div class="available-emergencies">
-                        <h3>Emergencias Disponibles</h3>
-                        <div id="availableEmergenciesList"></div>
-                    </div>
-                </div>
+        <div id="operatorPanel" class="bottom-panel hidden">
+            <h3>Panel de Operador</h3>
+            <div class="emergency-stats">
+                <span class="stat fire">🔥 <span id="fireCount">0</span></span>
+                <span class="stat police">👮‍♂️ <span id="policeCount">0</span></span>
+                <span class="stat ambulance">🚑 <span id="ambulanceCount">0</span></span>
             </div>
-        </main>
+            <div id="emergencyList" class="emergency-list"></div>
+        </div>
+
+
     </div>
 
-    <!-- Modal para crear emergencia -->
-    <div id="emergencyModal" class="modal hidden">
+    <div id="reportModal" class="modal hidden">
         <div class="modal-content">
             <h3>Reportar Emergencia</h3>
-            <form id="emergencyForm">
+            <form id="reportForm">
+                <div id="selectedLocationDisplay" class="location-display"></div>
                 <div class="form-group">
-                    <label for="emergencyType">Tipo de Emergencia:</label>
-                    <input type="text" id="emergencyType" readonly>
-                </div>
-                
-                <div class="form-group">
-                    <label for="description">Descripción:</label>
-                    <textarea id="description" rows="3" placeholder="Describe la situación..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="address">Dirección:</label>
-                    <input type="text" id="address" placeholder="Ingresa la dirección">
-                </div>
-                
-                <div class="form-group">
-                    <button type="button" onclick="getCurrentLocationForEmergency()" class="btn btn-warning">
-                        📍 Usar Mi Ubicación Actual
-                    </button>
-                    <div id="emergencyLocationStatus" class="location-status"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="priority">Prioridad:</label>
-                    <select id="priority">
-                        <option value="baja">Baja</option>
-                        <option value="media" selected>Media</option>
-                        <option value="alta">Alta</option>
-                        <option value="critica">Crítica</option>
+                    <label for="emergencyType">Tipo de Emergencia</label>
+                    <select id="emergencyType" class="form-select" required>
+                        <option value="">Selecciona tipo de emergencia</option>
+                        <option value="bomberos">🔥 Bomberos</option>
+                        <option value="policia">👮‍♂️ Policía</option>
+                        <option value="ambulancia">🚑 Ambulancia</option>
                     </select>
                 </div>
-                
+                <div class="form-group">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" class="form-textarea" placeholder="Describe la situación en detalle..." rows="4" required></textarea>
+                </div>
                 <div class="modal-actions">
-                    <button type="button" onclick="closeEmergencyModal()" class="btn btn-secondary">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">Reportar Emergencia</button>
+                    <button type="button" onclick="closeModal()" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Reportar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="auth.js"></script>
+    <script src="map.js"></script>
+    <script src="emergencies.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

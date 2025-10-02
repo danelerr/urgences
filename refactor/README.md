@@ -1,13 +1,70 @@
-# Urgences - Sistema de Emergencias Simplificado
+# 🚨 Urgences - Sistema de Emergencias
 
-## 📋 Descripción
-Urgences es un sistema de emergencias ultra simplificado diseñado para estudiantes de primaria. Utiliza únicamente HTML, CSS y JavaScript vanilla, sin bases de datos ni servidores complejos.
+Sistema web avanzado para gestión de emergencias con mapas interactivos y funcionalidades de geolocalización mejoradas.
 
-## 🚀 Características
-- **Sin instalación**: Solo abrir el archivo HTML en cualquier navegador
-- **Datos locales**: Utiliza localStorage para guardar información
-- **Responsive**: Funciona en computadoras, tablets y móviles
-- **Intuitivo**: Interfaz simple y fácil de usar
+## ✨ Mejoras Recientes Implementadas
+
+### ✅ 1. Emojis Corregidos
+- Todos los emojis se muestran correctamente en la interfaz
+- Iconos consistentes en toda la aplicación (🚨, 🔥, 👮, 🚑, 📍, 🎯)
+
+### 📍 2. Botón "Mi Ubicación" Mejorado
+- **Funcionalidad**: Centra el mapa automáticamente en tu ubicación actual
+- **Características**:
+  - Animación suave de centrado del mapa (zoom 17)
+  - Marcador azul distintivo con efecto de pulso
+  - Manejo robusto de errores de geolocalización
+  - Información de coordenadas en tiempo real
+  - Retroalimentación visual durante la carga
+
+### 🎯 3. Selector de Ubicación Estilo Uber
+- **Funcionalidad**: Permite seleccionar cualquier ubicación haciendo clic en el mapa
+- **Características**:
+  - Botón independiente "Seleccionar Ubicación"
+  - Cursor crosshair durante la selección
+  - Indicador visual con instrucciones claras y botón de cancelar
+  - Marcador rojo para ubicaciones seleccionadas
+  - Notificaciones elegantes de confirmación
+  - Posibilidad de cancelar la selección en cualquier momento
+
+## 🎮 Cómo Usar las Nuevas Funciones
+
+### Para Ciudadanos:
+1. **📍 Mi Ubicación**: 
+   - Haz clic en el botón "📍 Mi Ubicación" en el panel derecho
+   - Permite el acceso a la ubicación cuando el navegador lo solicite
+   - El mapa se centrará automáticamente con un marcador azul
+
+2. **🎯 Seleccionar Ubicación**:
+   - Haz clic en el botón "🎯 Seleccionar Ubicación"
+   - El cursor cambiará a una cruz y aparecerá un indicador visual
+   - Haz clic en cualquier punto del mapa para seleccionar la ubicación
+   - Se mostrará una notificación de confirmación
+
+## Características Principales
+
+### 🗺️ Mapa Interactivo
+- Visualización de emergencias en tiempo real con MapLibre GL
+- Diferentes colores para cada tipo de emergencia
+- Click en el mapa para reportar emergencias
+- Geolocalización avanzada con múltiples opciones
+
+### 👤 Tipos de Usuario
+
+**Ciudadano**: 
+- Ve el mapa con emergencias
+- Botón único para reportar
+- Click en mapa para seleccionar ubicación
+
+**Operador**:
+- Ve todos los reportes en panel inferior
+- Estadísticas por tipo de emergencia
+- Gestión completa de incidencias
+
+**Unidades (Bomberos/Policía/Ambulancia)**:
+- Ven emergencias de su tipo
+- Botón de enlace a Google Maps para navegación
+- Control de estado (disponible/en servicio)
 - **Educativo**: Ideal para enseñar conceptos básicos de programación web
 
 ## 👥 Tipos de Usuario
