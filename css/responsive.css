@@ -1,0 +1,236 @@
+@media (max-width: 768px) {
+    .login-card {
+        margin: 20px auto;
+        padding: 30px 20px;
+    }
+    
+    .header {
+        min-height: 60px;
+        padding: 0;
+    }
+    
+    .header-content {
+        flex-wrap: wrap;
+        gap: 8px;
+        text-align: center;
+        padding: 10px 15px;
+        min-height: 60px;
+    }
+    
+    .header h1 {
+        font-size: 1.3rem;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .user-info {
+        width: 100%;
+        flex-direction: row;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .user-info span {
+        font-size: 13px;
+        max-width: 150px;
+    }
+    
+    .user-info button,
+    .header .btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    
+    #mapContainer {
+        margin-top: 100px;
+        height: calc(100vh - 100px);
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
+    
+    .citizen-panel {
+        top: 110px;
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+        max-width: calc(100% - 20px);
+    }
+    
+    /* Operator Dashboard - Mobile */
+    .operator-dashboard {
+        width: 90%;
+        right: 5%;
+        left: 5%;
+        top: 110px;
+        bottom: 10px;
+        padding: 20px;
+    }
+    
+    .operator-dashboard h2 {
+        font-size: 20px;
+    }
+    
+    .operator-dashboard h3 {
+        font-size: 16px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+    }
+    
+    .filter-controls select {
+        width: 100%;
+    }
+    
+    .emergency-item-operator,
+    .emergency-item-unit {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .emergency-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .user-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .user-item button {
+        width: 100%;
+    }
+    
+    .toggle-panel-btn {
+        top: 110px;
+        right: 10px;
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    /* Unit Panel - Mobile */
+    .bottom-panel {
+        max-height: 350px;
+        padding: 15px;
+    }
+    
+    .unit-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .unit-header h3 {
+        font-size: 18px;
+    }
+    
+    .unit-status-control {
+        width: 100%;
+    }
+    
+    .unit-status-control select {
+        flex: 1;
+    }
+    
+    .unit-tabs {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .tab-btn {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    .emergency-list-unit,
+    .emergency-list-operator {
+        max-height: 200px;
+    }
+    
+    .emergency-actions-unit {
+        width: 100%;
+        flex-direction: row;
+    }
+    
+    .emergency-actions-unit button,
+    .emergency-actions-unit select {
+        flex: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 20px;
+    }
+    
+    .citizen-panel .btn {
+        font-size: 13px;
+        padding: 10px;
+    }
+    
+    .operator-dashboard {
+        width: 95%;
+        right: 2.5%;
+        left: 2.5%;
+        padding: 15px;
+    }
+    
+    .close-panel-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 16px;
+    }
+    
+    .emergency-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .bottom-panel {
+        padding: 12px;
+        max-height: 300px;
+    }
+    
+    .unit-tabs {
+        gap: 5px;
+    }
+    
+    .tab-btn {
+        font-size: 11px;
+        padding: 8px;
+    }
+    
+    .emergency-item-unit {
+        padding: 12px;
+    }
+    
+    .emergency-type-badge {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+    
+    .btn-small {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+}

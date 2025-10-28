@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urgences - Sistema de Emergencias</title>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/mapkick@0.2.6/dist/mapkick.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        Mapkick.options = {
+            style: {
+                "version": 8,
+                "sources": {
+                    "osm": {
+                        "type": "raster",
+                        "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+                        "tileSize": 256,
+                        "attribution": "© OpenStreetMap contributors"
+                    }
+                },
+                "layers": [{
+                    "id": "osm",
+                    "type": "raster",
+                    "source": "osm"
+                }]
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="loginScreen" class="screen">
+        <div class="login-card">
+            <h1>🚨 Urgences</h1>
+            <p>Sistema de Emergencias</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+            </form>
+            
+            <div class="demo-users">
+                <small>Usuarios de prueba:</small><br>
+                <small>ciudadano@test.com / operador@test.com / bombero@test.com / policia@test.com / ambulancia@test.com</small><br>
+                <small>Contraseña: 123456</small>
+            </div>
+        </div>
+    </div>
+
+    <div id="appScreen" class="screen hidden">
+        <header class="header">
+            <div class="header-content">
+                <h1>🚨 Urgences</h1>
+                <div class="user-info">
+                    <span id="userName">Usuario</span>
+                    <button id="logoutBtn" class="btn btn-secondary">Cerrar Sesión</button>
+                </div>
+            </div>
+        </header>
+
+        <div id="mapContainer" style="height: calc(100vh - 70px);"></div>
+
+        <div id="citizenPanel" class="citizen-panel hidden">
+            <h4>Panel Ciudadano</h4>
+            <button onclick="showReportModal()" class="btn btn-danger">🚨 Reportar Emergencia</button>
+            <button onclick="getCurrentLocation()" class="btn btn-warning">📍 Mi Ubicación</button>
+            <button onclick="startLocationSelectionFromPanel()" class="btn btn-info">📍 Seleccionar Ubicación</button>
+            <div id="locationInfo" class="location-info"></div>
+        </div>
+
+        <!-- Panel de Operador -->
+        <div id="operatorPanel" class="operator-dashboard hidden">
+            <button class="close-panel-btn" onclick="toggleOperatorPanel()">✕</button>
+            <h2>Panel de Operador</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Emergencias Activas</h3>
+                    <div class="stat-number" id="activeEmergencies">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Unidades Disponibles</h3>
+                    <div class="stat-number" id="availableUnits">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Usuarios</h3>
+                    <div class="stat-number" id="totalUsers">0</div>
+                </div>
+            </div>
+            
+            <div class="emergencies-section">
+                <h3>Todas las Emergencias</h3>
+                <div class="filter-controls">
+                    <select id="filterStatus" onchange="updateOperatorEmergencies()">
+                        <option value="">Todos los estados</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="en progreso">En Progreso</option>
+                        <option value="resuelto">Resuelto</option>
+                    </select>
+                    <select id="filterType" onchange="updateOperatorEmergencies()">
+                        <option value="">Todos los tipos</option>
+                        <option value="bomberos">Bomberos</option>
+                        <option value="policia">Policía</option>
+                        <option value="ambulancia">Ambulancia</option>
+                    </select>
+                </div>
+                <div id="operatorEmergencyList" class="emergency-list-operator"></div>
+            </div>
+            
+            <div class="users-section">
+                <h3>Gestión de Usuarios</h3>
+                <div id="usersList" class="users-list"></div>
+            </div>
+        </div>
+
+        <!-- Panel de Unidades de Emergencia (Bombero/Policía/Ambulancia) -->
+        <div id="unitPanel" class="bottom-panel hidden">
+            <div class="unit-header">
+                <h3><span id="unitTypeLabel">Unidad</span></h3>
+                <div class="unit-status-control">
+                    <label for="unitStatus">Estado:</label>
+                    <select id="unitStatus" onchange="handleUnitStatusChange()">
+                        <option value="disponible">Disponible</option>
+                        <option value="en_servicio">En Servicio</option>
+                        <option value="fuera_servicio">Fuera de Servicio</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="unit-tabs">
+                <button class="tab-btn active" onclick="switchUnitTab('assigned')">Mis Emergencias Asignadas</button>
+                <button class="tab-btn" onclick="switchUnitTab('available')">Emergencias Disponibles</button>
+            </div>
+            
+            <div id="assignedTab" class="tab-content active">
+                <div id="assignedEmergenciesList" class="emergency-list-unit"></div>
+            </div>
+            
+            <div id="availableTab" class="tab-content">
+                <div id="availableEmergenciesList" class="emergency-list-unit"></div>
+            </div>
+        </div>
+
+        <button id="togglePanelBtn" class="toggle-panel-btn hidden" onclick="toggleOperatorPanel()">
+            📊 Dashboard
+        </button>
+
+    </div>
+
+    <div id="reportModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Reportar Emergencia</h3>
+            <form id="reportForm">
+                <div id="selectedLocationDisplay" class="location-display"></div>
+                <div class="form-group">
+                    <label for="emergencyType">Tipo de Emergencia</label>
+                    <select id="emergencyType" class="form-select" required>
+                        <option value="">Selecciona tipo de emergencia</option>
+                        <option value="bomberos">🔥 Bomberos</option>
+                        <option value="policia">👮‍♂️ Policía</option>
+                        <option value="ambulancia">🚑 Ambulancia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" class="form-textarea" placeholder="Describe la situación en detalle..." rows="4" required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" onclick="closeModal()" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Reportar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="map.js"></script>
+    <script src="emergencies.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

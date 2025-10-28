@@ -1,0 +1,55 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    min-height: 70px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    padding: 0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    min-height: 70px;
+    max-width: 100%;
+    gap: 15px;
+    flex-wrap: nowrap;
+}
+
+.header h1 {
+    color: white;
+    font-size: 1.8rem;
+    margin: 0;
+    flex-shrink: 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 1;
+    flex-wrap: wrap;
+    min-width: 0;
+    justify-content: flex-end;
+}
+
+.user-info span {
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    max-width: 200px;
+}
+
+#mapContainer {
+    margin-top: 70px;
+    height: calc(100vh - 70px);
+}
